@@ -1,0 +1,33 @@
+{% extends 'modules_app/base.html' %}
+{% block title %}Result{% endblock %}
+{% block content %}
+<body>
+    <h1 class="text-center mt-5">Final Voting Result</h1>
+    <div class="container-fluid text-center mt-5">
+
+    <table class="table" style="width: 600px; margin: auto; align-items: center">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Candidate</th>
+                <th>Votes Count</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for candidate, votes_count in votes_dict.items %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ candidate }}</td>
+                    <td>{{ votes_count }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+        
+    <!-- <ol>
+        {% for candidate, votes_count in votes_dict.items %}
+            <li>{{ candidate }}: {{ votes_count }}</li>
+        {% endfor %}
+    </ol> -->
+</div>
+{% endblock %}

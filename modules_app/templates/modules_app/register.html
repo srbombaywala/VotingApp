@@ -1,0 +1,25 @@
+{% extends 'modules_app/base.html' %}
+{% block title %}Register{% endblock %}
+{% block content %}
+    <div style="width: fit-content;left: 90%;position: relative;">
+    <button type="button" class="btn btn-outline-secondary"><a class="text-decoration-none text-dark" href="/">Home</a></button>
+    </div>
+    <h1 class="text-center mt-5">Enter Details to Register a Member</h1>
+    <div class="container-fluid text-center mt-5">
+        <form action="{% url 'register' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <!-- {{ form.as_p }} -->
+            <div class="row" style="width: 400px; margin: auto; align-items: center">
+                {% for field in form%}
+                <div class="col-md-4 mb-2">
+                    {{ field.label_tag }}
+                </div>
+                <div class="col-md-8 mb-2">
+                    {{ field }}
+                </div>
+                {% endfor %}
+            </div>
+            <button class="btn btn-secondary" type="submit">Register</button>
+        </form>
+    </div>
+{% endblock %}

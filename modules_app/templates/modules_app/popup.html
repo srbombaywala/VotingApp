@@ -1,0 +1,129 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
+    <title>Popup Page</title>
+    <style>
+        /* Add some basic styling */
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        input {
+            margin-bottom: 10px;
+        }
+        .add-button {
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        #errorMessage {
+            color: red;
+        }
+    </style>
+</head>
+<body> -->
+
+{% extends 'modules_app/base.html' %}
+{% block title %}Vote{% endblock %}
+{% block content %}
+
+    <h1 class="text-center mt-5">Voting Page</h1>
+    <div class="container-fluid text-center mt-5">
+        <form id="inputForm" action="{% url 'popup_modal' voter.id %}" onsubmit="return validateForm(event)" method="POST">
+            {% csrf_token %}
+            <div id="inputFieldsContainer">
+                <div class="row" style="width: 400px; margin: auto; align-items: center">
+
+                {% for field in form %}
+                        <div class="col-md-8 mb-3">
+                            {{field}}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <button type="button" class="btn btn-success" onclick="openMemberListPopup('{{ field.name }}')">Add</button>
+                        </div>
+                {% endfor %}
+                </div>
+            </div>
+
+            <!-- Error message for duplicate names -->
+            <div id="errorMessage"></div>
+
+            <!-- Submit button -->
+            <input class="btn btn-secondary" type="submit" value="Submit">
+        </form>
+    </div>
+
+    <script>
+        var selectedMembers = [];
+        // Function to open the member list popup
+        function openMemberListPopup(targetField) {
+            // Set the target field ID in localStorage
+            localStorage.setItem('targetField', targetField);
+
+            // Get the user's screen width and height
+            var screenWidth = window.screen.width;
+            var screenHeight = window.screen.height;
+
+            // Open the member list popup
+            var popupUrl = '/member_list_popup/';
+            window.open(popupUrl, 'MemberListPopup', 'width=' + screenWidth + ',height=' + screenHeight + ',scrollbars=yes, resizable=no');
+        }
+
+// Function to validate form submission
+    function validateForm(event) {
+    // Reset error message
+    document.getElementById('errorMessage').textContent = '';
+
+    // Check for duplicate ppan values
+    var ppanValues = [];
+    var inputs = document.getElementById('inputForm').elements;
+    for (var i = 0; i < inputs.length; i++) {
+        if (inputs[i].type === 'text' && inputs[i].name !== '') {
+            var fieldValue = inputs[i].value.trim(); // Trim leading/trailing spaces
+            var ppanValue = fieldValue.substring(fieldValue.lastIndexOf('(') + 1, fieldValue.lastIndexOf(')')).trim();
+            
+            if (ppanValues.includes(ppanValue)) {
+                // Display error message
+                document.getElementById('errorMessage').textContent = 'Duplicate PPAN values are not allowed.';
+                event.preventDefault(); // Prevent form submission
+                return false;
+            }
+            ppanValues.push(ppanValue);
+        }
+    }
+
+    // Store selected members in the array
+    selectedMembers = [];
+    for (var i = 1; i <= 5; i++) {
+        var fieldName = 'field' + i;
+        var fieldValue = document.getElementById(fieldName).value.trim(); // Trim leading/trailing spaces
+        if (fieldValue !== '') {
+            selectedMembers.push(fieldValue);
+        }
+    }
+
+    // Check if exactly five unique members are selected
+    if (selectedMembers.length !== 5) {
+        // Display error message
+        document.getElementById('errorMessage').textContent = 'Please select exactly five unique members.';
+        event.preventDefault(); // Prevent form submission
+        return false;
+    }
+
+    // Allow form submission if validation is successful
+    return true;
+}
+    </script>
+{% endblock %}

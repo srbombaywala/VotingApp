@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vote</title>
+</head>
+<body>
+    <table class="table caption-top">
+        <caption>List of users</caption>
+        <thead>
+          <tr>
+            <th scope="col" style="width: 25%">Sr.No</th>
+            <th scope="col" style="width: 25%">First</th>
+            <th scope="col" style="width: 25%">Last</th>
+            <th scope="col" style="width: 25%">Details</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+                <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{user.first_name}}</td>
+                <td>{{user.last_name}}</td>
+                <!-- <td>
+                    <img
+                    style="max-width: 20%;"
+                    src="{{ user.picture.url }}"
+                    alt="{{ user.first_name }} {{ user.last_name }} "
+                    />
+                </td> -->
+                <td>
+                    <a href="{% url 'add_user' user.id %}">Add</a>
+                </td>
+                </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+</body>
+</html>

@@ -1,0 +1,28 @@
+{% extends 'modules_app/base.html' %}
+{% block title %}Generate OTP{% endblock %}
+
+{% block content %}
+    <div style="width: fit-content;left: 90%;position: relative;">
+    <button type="button" class="btn btn-outline-secondary"><a class="text-decoration-none text-dark" href="/">Home</a></button>
+    </div>
+    <h1 class="text-center mt-5">Enter PPAN to Generate OTP</h1>
+    <div class="container-fluid text-center mt-5">
+        <form action="{% url 'generateOTP' %}" method="POST">
+            {% csrf_token %}
+            <!-- <div>
+                {{ form.as_p }}
+            </div> -->
+            <div class="row" style="width: 300px; margin: auto; align-items: center">
+                <div class="col-md-3">
+                    {{ form.ppan.label_tag }}
+                </div>
+                <div class="col-md-9">
+                    {{ form.ppan }}
+                </div>
+            </div>
+            <p class="text-danger">{{message}}</p>
+            <button type="submit" class="btn btn-secondary mt-5">Generate OTP</button>
+        </form>
+    </div>
+
+{% endblock %}
