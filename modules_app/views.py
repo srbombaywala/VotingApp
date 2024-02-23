@@ -29,7 +29,7 @@ def generateOTP(request):
         if form.is_valid():
             ppan = form.cleaned_data['ppan']
             voter = member.objects.get(ppan=ppan)
-            if voter.otp == '' and voter.has_voted == False:
+            if voter.otp is None and voter.has_voted == False:
                 generated_otp = voter.generate_otp()
                 return render(request, 'modules_app/generate_otp.html',{'message':f'The otp generated for {voter.first_name} is {generated_otp}', 'form':form})
             else:
