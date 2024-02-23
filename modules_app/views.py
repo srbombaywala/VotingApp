@@ -56,6 +56,7 @@ def logintovote(request):
                     members = member.objects.all()
                     # Set a session flag to indicate successful login
                     request.session['login_flag'] = True
+                    print("Login flag set:", request.session['login_flag'])
                     return redirect('popup_modal', voter_id = voter.id)
                 elif voter.has_voted and password == '654321':
                     messages.info(request, 'You have already voted!')
