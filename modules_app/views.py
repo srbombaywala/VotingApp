@@ -69,14 +69,15 @@ def logintovote(request):
         return render(request, 'modules_app/logintovote.html', {'form':form})
 
 
-@login_required(login_url='/logintovote/')
+# @login_required(login_url='/logintovote/')
 def popup_modal(request, voter_id):
     if not request.session.get('login_flag'):
         return HttpResponseForbidden("Access denied. You must log in first.")
     voter = get_object_or_404(member, id=voter_id)
     if request.method == "POST":
         form = votingform(request.POST)
-        if form.is_valid():
+        if form.is_valid() and request.session.get('login_flag'):
+            del request.session['login_flag']
             member1 = form.cleaned_data['field1']
             member2 = form.cleaned_data['field2']
             member3 = form.cleaned_data['field3']
@@ -84,7 +85,6 @@ def popup_modal(request, voter_id):
             member5 = form.cleaned_data['field5']
             # save the members.....
             voter.save_vote([member1, member2, member3, member4, member5])
-            del request.session['login_flag']
             messages.success(request,"Thank you for voting")
             return redirect('index')
             # return render(request, 'modules_app/index.html', {'message':'Your vote has been registered. Thank you'})
