@@ -68,7 +68,7 @@ def logintovote(request):
         return render(request, 'modules_app/logintovote.html', {'form':form})
 
 
-# @login_required
+@login_required(login_url='/logintovote/')
 def popup_modal(request, voter_id):
     if not request.session.get('login_flag'):
         return HttpResponseForbidden("Access denied. You must log in first.")
