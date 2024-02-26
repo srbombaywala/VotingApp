@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.contrib import messages
 from urllib.parse import urlencode, parse_qs
+from django.contrib.auth import authenticate, login, logout
 
 def index(request):
     return render(request, 'modules_app/index.html', {'message':''})
@@ -56,6 +57,7 @@ def logintovote(request):
                     members = member.objects.all()
                     # Set a session flag to indicate successful login
                     request.session['login_flag'] = True
+                    login(request, voter)
                     print("Login flag set:", request.session['login_flag'])
                     return redirect('popup_modal', voter_id = voter.id)
                 elif voter.has_voted and password == '654321':
@@ -69,7 +71,7 @@ def logintovote(request):
         return render(request, 'modules_app/logintovote.html', {'form':form})
 
 
-# @login_required(login_url='/logintovote/')
+@login_required(login_url='/logintovote/')
 def popup_modal(request, voter_id):
     if not request.session.get('login_flag'):
         return HttpResponseForbidden("Access denied. You must log in first.")
@@ -85,6 +87,7 @@ def popup_modal(request, voter_id):
             member5 = form.cleaned_data['field5']
             # save the members.....
             voter.save_vote([member1, member2, member3, member4, member5])
+            logout(request)
             messages.success(request,"Thank you for voting")
             return redirect('index')
             # return render(request, 'modules_app/index.html', {'message':'Your vote has been registered. Thank you'})
